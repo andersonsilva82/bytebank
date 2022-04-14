@@ -3,55 +3,69 @@ import 'package:flutter/material.dart';
 void main() => runApp(ByteBankApp());
 
 class FormularioTransferencia extends StatelessWidget {
-  const FormularioTransferencia({Key? key}) : super(key: key);
+
+  final TextEditingController _controladorCampoNumeroConta =
+  TextEditingController();
+  final TextEditingController _controladorCampoValor = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: const <Widget>[
-          CamposValores('Valor', '000,00' ),
-          CamposValores('Conta', '00000'),
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+            child: TextField(
+              controller: _controladorCampoValor,
+              style: const TextStyle(
+                fontSize: 24.0,
+                color: Colors.blue,
+              ),
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Valor',
+                hintText: '000,00',
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+            child: TextField(
+              controller: _controladorCampoNumeroConta,
+              style: const TextStyle(
+                fontSize: 24.0,
+                color: Colors.blue,
+              ),
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Conta',
+                hintText: '0000',
+                icon: Icon(Icons.monetization_on_rounded),
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: () {
+              final double valor = double.parse(_controladorCampoValor.value.text);
+              final int numeroConta = int.parse(_controladorCampoNumeroConta.value.text);
 
-         ElevatedButton(onPressed: null, child: Text('Confirmar')),
+              if (numeroConta != null && valor != null){
+                final transferenciaCriada = Transferencia(valor, numeroConta);
+                debugPrint('$transferenciaCriada');
+              }
+            },
+
+            child: Text('Confirmar'),
+          ),
         ],
       ),
       appBar: AppBar(
         title: Text('Criando Transferência'),
         elevation: 5,
         centerTitle: true,
-        foregroundColor: Colors.amber,
+        foregroundColor: Colors.lightBlue,
         backgroundColor: Colors.black,
-      ),
-    );
-  }
-}
-
-class CamposValores extends StatelessWidget {
-  final String labelInfo;
-  final String hintInfo;
-
-  const CamposValores(
-    this.labelInfo,
-    this.hintInfo, {
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-      child: TextField(
-        style: TextStyle(
-          fontSize: 24.0,
-          color: Colors.blue,
-        ),
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          icon: Icon(Icons.monetization_on),
-          labelText: labelInfo,
-          hintText: hintInfo,
-        ),
       ),
     );
   }
@@ -101,10 +115,10 @@ class ItemTransferencia extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: ListTile(
-      leading: Icon(Icons.monetization_on),
-      title: Text(_tranferencia.valor.toString()),
-      subtitle: Text(_tranferencia.numeroConta.toString()),
-    ));
+          leading: Icon(Icons.monetization_on),
+          title: Text(_tranferencia.valor.toString()),
+          subtitle: Text(_tranferencia.numeroConta.toString()),
+        ));
   }
 }
 
@@ -113,4 +127,10 @@ class Transferencia {
   final int numeroConta;
 
   Transferencia(this.valor, this.numeroConta);
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'Transferencia{valor: $valor, numeroConta: $numeroConta}';
+  }
 }
