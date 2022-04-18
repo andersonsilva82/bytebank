@@ -134,13 +134,16 @@ class ListaTransferenciaState extends State<ListaTransferencias> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          final Future<dynamic> future =
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+          final Future future = Navigator.push(context, MaterialPageRoute(builder: (context) {
             return FormularioTransferencia();
           }));
           future.then((transferenciaRecebida) {
+            setState(() {
+              widget._transferencias.add(transferenciaRecebida);
+            });
             debugPrint('teste: $transferenciaRecebida');
-            widget._transferencias.add(transferenciaRecebida);
+
+
           });
         },
       ),
